@@ -1,16 +1,36 @@
-# React + Vite
+🌦️ CloudCast: Dynamic Weather Dashboard
+CloudCast is a high-performance, responsive weather application built with React and Vite. It features a "catchy" Glassmorphism UI that adapts its entire color theme based on the real-time weather conditions of the searched city.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🔗 [Live Demo](https://salmon6934.github.io/weather-app/)
 
-Currently, two official plugins are available:
+🚀 Key Features
+Dynamic UI Engine: The background and card styles change dynamically (Clear, Cloudy, Rainy, Stormy, Snowy) using custom CSS classes tied to API weather codes.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Intelligent Search: A searchable datalist featuring 50+ global cities, allowing users to select from a list or search manually.
 
-## React Compiler
+Real-time Data: Integrated with the Open-Meteo API for high-accuracy weather data without the need for an API key.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Glassmorphism Design: A modern UI/UX approach using backdrop filters for a premium "frosted glass" look.
 
-## Expanding the ESLint configuration
+Responsive & Animated: Fully optimized for mobile devices with smooth fade-in and floating animations for icons.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+🛠️ Tech Stack
+Frontend: React 19 (Vite)
+
+Icons: Lucide-React
+
+Styling: Custom CSS3 (Flexbox, CSS Variables, Glassmorphism)
+
+API: Open-Meteo (Geocoding & Forecast)
+
+Deployment: GitHub Pages
+
+📐 Technical Implementation
+1. The "Double-Fetch" Pattern
+The app first hits the Geocoding API to convert a city string into latitude and longitude coordinates, then passes those coordinates to the Forecast API to get current weather data.
+
+2. State Management
+Used React useState and useEffect hooks to manage loading states, weather data objects, and the search input logic.
+
+3. Data Modularization
+Location data is stored in a standalone cities.js module, ensuring the logic in App.jsx remains clean and the dataset can be scaled easily without affecting the core code.
