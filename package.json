@@ -1,4 +1,5 @@
 {
+  "homepage": "https://salmon6934.github.io/weather-app",
   "name": "weather-app",
   "private": true,
   "version": "0.0.0",
@@ -7,7 +8,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "lucide-react": "^1.8.0",
