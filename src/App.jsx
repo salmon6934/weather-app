@@ -21,6 +21,34 @@ const WeatherIcon = ({ code }) => {
   return <Sun size={48} />;
 };
 
+const getWeatherDescription = (code) => {
+  const descriptions = {
+    0: "Clear Sky",
+    1: "Mainly Clear",
+    2: "Partly Cloudy",
+    3: "Overcast",
+    45: "Foggy",
+    48: "Depositing Rime Fog",
+    51: "Light Drizzle",
+    53: "Moderate Drizzle",
+    55: "Dense Drizzle",
+    61: "Slight Rain",
+    63: "Moderate Rain",
+    65: "Heavy Rain",
+    71: "Slight Snow",
+    73: "Moderate Snow",
+    75: "Heavy Snow",
+    77: "Snow Grains",
+    80: "Slight Rain Showers",
+    81: "Moderate Rain Showers",
+    82: "Violent Rain Showers",
+    95: "Thunderstorm",
+    96: "Thunderstorm with Slight Hail",
+    99: "Thunderstorm with Heavy Hail"
+  };
+  return descriptions[code] || "Unknown Conditions";
+};
+
 const getWeatherClass = (code) => {
   if (code === 0) return 'clear';
   if (code >= 1 && code <= 3) return 'cloudy';
@@ -30,13 +58,13 @@ const getWeatherClass = (code) => {
   return 'default';
 };
 
+
 function App() {
   const [city, setCity] = useState('');
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const fetchWeather = async () => {
-    // Clean the input: "Patna, India" -> "Patna"
     const cityNameOnly = city.split(',')[0].trim();
     if (!cityNameOnly) return;
 
@@ -64,7 +92,6 @@ function App() {
         humidity: weatherData.hourly.relativehumidity_2m[0]
       });
       
-      // Blur input to hide the datalist after search
       document.activeElement.blur();
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -129,7 +156,7 @@ function App() {
               </div>
               <div className="col">
                 <Sun size={20} />
-                <p>Sky Code: {weather.condition}</p>
+                <p>{getWeatherDescription(weather.condition)}</p>
                 <span>Condition</span>
               </div>
             </div>
