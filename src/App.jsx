@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
-import { 
-  Search, MapPin, Wind, Droplets, 
-  Sun, Cloud, CloudRain, CloudLightning, CloudSnow, CloudFog 
+import {
+  Search, MapPin, Wind, Droplets, Moon,
+  Sun, Cloud, CloudRain, CloudLightning, CloudSnow, CloudFog
 } from 'lucide-react';
 import './App.css';
 import { countryData } from './cities';
 
-const allCitiesFlattened = countryData.flatMap(item => 
+const allCitiesFlattened = countryData.flatMap(item =>
   item.cities.map(cityName => `${cityName}, ${item.country}`)
 );
 
 const WeatherIcon = ({ code }) => {
-  if (code === 0) return <Sun size={48} color="#FFD700" />; 
-  if (code >= 1 && code <= 3) return <Cloud size={48} color="#bdc3c7" />; 
-  if (code >= 45 && code <= 48) return <CloudFog size={48} color="#ecf0f1" />; 
-  if (code >= 51 && code <= 67) return <CloudRain size={48} color="#3498db" />; 
-  if (code >= 71 && code <= 77) return <CloudSnow size={48} color="#ffffff" />; 
-  if (code >= 80 && code <= 82) return <CloudRain size={48} color="#2980b9" />; 
-  if (code >= 95) return <CloudLightning size={48} color="#f1c40f" />; 
+  if (code === 0) return <Sun size={48} color="#FFD700" />;
+  if (code >= 1 && code <= 3) return <Cloud size={48} color="#bdc3c7" />;
+  if (code >= 45 && code <= 48) return <CloudFog size={48} color="#ecf0f1" />;
+  if (code >= 51 && code <= 67) return <CloudRain size={48} color="#3498db" />;
+  if (code >= 71 && code <= 77) return <CloudSnow size={48} color="#ffffff" />;
+  if (code >= 80 && code <= 82) return <CloudRain size={48} color="#2980b9" />;
+  if (code >= 95) return <CloudLightning size={48} color="#f1c40f" />;
   return <Sun size={48} />;
 };
 
@@ -63,6 +63,8 @@ function App() {
   const [city, setCity] = useState('');
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isDark, setDark] = useState(false);
+
 
   const fetchWeather = async () => {
     const cityNameOnly = city.split(',')[0].trim();
@@ -80,18 +82,19 @@ function App() {
       }
       const { latitude, longitude, name, country } = geoData.results[0];
 
-      const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&hourly=relativehumidity_2m`);
+      const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&hourly=relativehumidity_2m&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=auto`);
       const weatherData = await weatherRes.json();
-      
+
       setWeather({
         name,
         country,
-        temp: Math.round(weatherData.current_weather.temperature),
-        wind: weatherData.current_weather.windspeed,
-        condition: weatherData.current_weather.weathercode,
-        humidity: weatherData.hourly.relativehumidity_2m[0]
+        temp: Math.round(weatherData.current_weather?.temperature || 0),
+        wind: weatherData.current_weather?.windspeed || 0,
+        condition: weatherData.current_weather?.weathercode || 0,
+        daily: weatherData.daily,
+        humidity: weatherData.hourly?.relativehumidity_2m?.[0] || 0
       });
-      
+
       document.activeElement.blur();
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -101,21 +104,28 @@ function App() {
   };
 
   return (
-    <div className={`container ${weather ? getWeatherClass(weather.condition) : 'default'}`}>
+    <div className={`container ${isDark ? 'dark' : 'light'} ${weather ? getWeatherClass(weather.condition) : 'default'}`}>
+      <button
+        onClick={() => setDark(!isDark)}
+        className="theme-toggle"
+        title="Toggle Theme"
+      >
+        {isDark ? <Sun size={24} color="white" /> : <Moon size={24} color="#333" />}
+      </button>
       <div className="glass-card">
         <h2 className="title">CloudCast</h2>
-        
+
         <div className="search-section">
           <label htmlFor="city-choice" className="label">Search or Select City:</label>
           <div className="input-wrapper">
-            <input 
-              list="city-list" 
-              id="city-choice" 
+            <input
+              list="city-list"
+              id="city-choice"
               value={city}
               onChange={(e) => setCity(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && fetchWeather()}
               onFocus={() => setCity('')}
-              placeholder="e.g. Patna, India" 
+              placeholder="e.g. Patna, India"
               className="search-input"
               autoComplete="off"
             />
@@ -160,7 +170,22 @@ function App() {
                 <span>Condition</span>
               </div>
             </div>
+            <div className="forecast-grid">
+              {weather?.daily?.time?.slice(1, 6).map((date, index) => (
+                <div key={date} className="forecast-item">
+                  <p className="day-name">
+                    {new Date(date).toLocaleDateString('en-US', { weekday: 'short' })}
+                  </p>
+                  <div className="temp-range">
+                    {/* Note the index + 1 to skip today's data */}
+                    <span className="max">{Math.round(weather.daily.temperature_2m_max[index + 1])}°</span>
+                    <span className="min">{Math.round(weather.daily.temperature_2m_min[index + 1])}°</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
+
         )}
       </div>
     </div>

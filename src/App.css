@@ -19,26 +19,90 @@ body, html {
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: background var(--transition-speed) ease-in-out;
+  transition: background 0.8s ease-in-out, color 0.5s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.container.default { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); }
-.container.clear { background: linear-gradient(135deg, #9bac03 0%, #c29f049f 100%); }
-.container.cloudy { background: linear-gradient(135deg, #bdc3c7 0%, #2c3e50 100%); }
-.container.rain { background: linear-gradient(135deg, #203a43 0%, #2c5364 100%); }
-.container.storm { background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%); }
-.container.snow { background: linear-gradient(135deg, #e6e9f0 0%, #eef1f5 100%); color: #333; }
+.container.default { 
+  background: linear-gradient(135deg, #000000 0%, #434343 100%); 
+  color: #ffffff;
+}
+
+.container.clear { 
+  background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%); 
+  color: #1a1a1a;
+}
+
+.container.cloudy { 
+  background: linear-gradient(135deg, #bdc3c7 0%, #2c3e50 100%); 
+  color: #ffffff;
+}
+
+.container.rain { 
+  background: linear-gradient(135deg, #203a43 0%, #2c5364 100%); 
+  color: #ffffff;
+}
+
+.container.storm { 
+  background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%); 
+  color: #ffffff;
+}
+
+.container.snow { 
+  background: linear-gradient(135deg, #e6e9f0 0%, #eef1f5 100%); 
+  color: #333; 
+}
+
+.container.dark::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+  pointer-events: none;
+  transition: opacity 0.8s ease-in-out;
+}
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 2;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.container.clear .glass-card, 
+.container.snow .glass-card {
+  color: #1a1a1a;
+  --glass-bg: rgba(255, 255, 255, 0.25);
+  --glass-border: rgba(255, 255, 255, 0.4);
+}
+
+.container.default .glass-card,
+.container.storm .glass-card,
+.container.rain .glass-card {
+  color: #ffffff;
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+.glass-card {
+  background: var(--glass-bg);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--glass-border);
   border-radius: 30px;
   padding: 40px;
   width: 90%;
   max-width: 500px;
-  color: white;
+  color: var(--text-color);
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
   text-align: center;
   transition: border-color 0.5s ease;
@@ -206,3 +270,57 @@ body, html {
   .temp { font-size: 3.8rem; }
   .title { font-size: 1.8rem; }
 }
+
+.theme-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: var(--glass-bg);
+  border: 2px solid rgba(145, 145, 145, 0.76);
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+  background: var(--accent);
+}
+
+.forecast-grid {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  gap: 10px;
+}
+
+.forecast-item {
+  flex: 1;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.forecast-item:hover {
+  transform: translateY(-5px); /* Subtle lift on hover */
+}
+
+.day-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+  opacity: 0.9;
+}
+
+.temp-range {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+}
+
+.max { font-weight: bold; }
+.min { opacity: 0.6; }
