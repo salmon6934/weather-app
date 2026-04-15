@@ -66,8 +66,9 @@ function App() {
   const [isDark, setDark] = useState(false);
 
 
-  const fetchWeather = async () => {
-    const cityNameOnly = city.split(',')[0].trim();
+  const fetchWeather = async (passedCity) => {
+    const cityToSearch=passedCity && typeof passedCity==='string' ? passedCity : city;
+    const cityNameOnly = cityToSearch.split(',')[0].trim();
     if (!cityNameOnly) return;
 
     setLoading(true);
@@ -122,16 +123,19 @@ function App() {
               list="city-list"
               id="city-choice"
               value={city}
-              onChange={(e) => setCity(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && fetchWeather()}
+              onChange={(e) => {
+                const selected=e.target.value;
+                setCity(selected);
+                if(allCitiesFlattened.includes(selected)){
+                  fetchWeather(selected);}
+                }
+              }
+              onKeyDown={(e) => {if(e.key === 'Enter') fetchWeather(city);}}
               onFocus={() => setCity('')}
-              placeholder="e.g. Patna, India"
+              placeholder="Select a city"
               className="search-input"
               autoComplete="off"
             />
-            <button className="search-btn" onClick={fetchWeather}>
-              <Search size={20} />
-            </button>
           </div>
 
           <datalist id="city-list">
@@ -177,7 +181,6 @@ function App() {
                     {new Date(date).toLocaleDateString('en-US', { weekday: 'short' })}
                   </p>
                   <div className="temp-range">
-                    {/* Note the index + 1 to skip today's data */}
                     <span className="max">{Math.round(weather.daily.temperature_2m_max[index + 1])}°</span>
                     <span className="min">{Math.round(weather.daily.temperature_2m_min[index + 1])}°</span>
                   </div>
