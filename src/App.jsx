@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Search, MapPin, Wind, Droplets, Moon,
   Sun, Cloud, CloudRain, CloudLightning, CloudSnow, CloudFog
@@ -103,6 +103,53 @@ function App() {
       setLoading(false);
     }
   };
+
+  const fetchWeatherByCoords = async (latitude, longitude, name = "Current Location", country = "") => {
+    setLoading(true);
+    try {
+      const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&hourly=relativehumidity_2m&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=auto`);
+      const weatherData = await weatherRes.json();
+
+      setWeather({
+        name,
+        country,
+        temp: Math.round(weatherData.current_weather?.temperature || 0),
+        wind: weatherData.current_weather?.windspeed || 0,
+        condition: weatherData.current_weather?.weathercode || 0,
+        daily: weatherData.daily,
+        humidity: weatherData.hourly?.relativehumidity_2m?.[0] || 0
+      });
+    } catch (error) {
+      console.error("Error fetching weather by coords:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          try {
+            const geoRes = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
+            const geoData = await geoRes.json();
+            const cityName = geoData.city || geoData.locality || "Current Location";
+            const countryName = geoData.countryName || "";
+            fetchWeatherByCoords(latitude, longitude, cityName, countryName);
+          } catch (e) {
+            fetchWeatherByCoords(latitude, longitude, "Current Location", "");
+          }
+        },
+        (error) => {
+          console.warn("Geolocation permission denied or failed:", error);
+          fetchWeather("London");
+        }
+      );
+    } else {
+      fetchWeather("London");
+    }
+  }, []);
 
   return (
     <div className={`container ${isDark ? 'dark' : 'light'} ${weather ? getWeatherClass(weather.condition) : 'default'}`}>

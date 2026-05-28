@@ -4,7 +4,8 @@
   --transition-speed: 0.8s;
 }
 
-body, html {
+body,
+html {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -24,34 +25,34 @@ body, html {
   overflow: hidden;
 }
 
-.container.default { 
-  background: linear-gradient(135deg, #000000 0%, #434343 100%); 
+.container.default {
+  background: linear-gradient(135deg, #000000 0%, #434343 100%);
   color: #ffffff;
 }
 
-.container.clear { 
-  background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%); 
+.container.clear {
+  background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
   color: #1a1a1a;
 }
 
-.container.cloudy { 
-  background: linear-gradient(135deg, #bdc3c7 0%, #2c3e50 100%); 
+.container.cloudy {
+  background: linear-gradient(135deg, #bdc3c7 0%, #2c3e50 100%);
   color: #ffffff;
 }
 
-.container.rain { 
-  background: linear-gradient(135deg, #203a43 0%, #2c5364 100%); 
+.container.rain {
+  background: linear-gradient(135deg, #203a43 0%, #2c5364 100%);
   color: #ffffff;
 }
 
-.container.storm { 
-  background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%); 
+.container.storm {
+  background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%);
   color: #ffffff;
 }
 
-.container.snow { 
-  background: linear-gradient(135deg, #e6e9f0 0%, #eef1f5 100%); 
-  color: #333; 
+.container.snow {
+  background: linear-gradient(135deg, #e6e9f0 0%, #eef1f5 100%);
+  color: #333;
 }
 
 .container.dark::before {
@@ -78,7 +79,7 @@ body, html {
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
 }
 
-.container.clear .glass-card, 
+.container.clear .glass-card,
 .container.snow .glass-card {
   color: #1a1a1a;
   --glass-bg: rgba(255, 255, 255, 0.25);
@@ -168,6 +169,10 @@ body, html {
   box-shadow: 0 0 15px rgba(255, 126, 95, 0.3);
 }
 
+.search-input:hover {
+  transform: scale(1.05);
+}
+
 .search-btn {
   background: var(--accent);
   border: none;
@@ -184,7 +189,7 @@ body, html {
 
 .search-btn:hover {
   background: var(--accent-hover);
-  transform: scale(1.08);
+  transform: scale(1.1);
 }
 
 .weather-info {
@@ -192,7 +197,7 @@ body, html {
 }
 
 .main-icon {
-  margin: 15px 0;
+  margin: 15px 0 35px 0;
   display: flex;
   justify-content: center;
   filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
@@ -229,6 +234,11 @@ body, html {
   flex-direction: column;
   align-items: center;
   gap: 4px;
+  transition: transform 0.3s ease;
+}
+
+.col:hover {
+  transform: scale(1.1);
 }
 
 .col p {
@@ -245,9 +255,17 @@ body, html {
 }
 
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 .fade-in {
@@ -255,8 +273,15 @@ body, html {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .loading {
@@ -266,9 +291,17 @@ body, html {
 }
 
 @media (max-width: 480px) {
-  .glass-card { padding: 25px; }
-  .temp { font-size: 3.8rem; }
-  .title { font-size: 1.8rem; }
+  .glass-card {
+    padding: 25px;
+  }
+
+  .temp {
+    font-size: 3.8rem;
+  }
+
+  .title {
+    font-size: 1.8rem;
+  }
 }
 
 .theme-toggle {
@@ -306,7 +339,7 @@ body, html {
 }
 
 .forecast-item:hover {
-  transform: translateY(-5px); /* Subtle lift on hover */
+  transform: scale(1.1);
 }
 
 .day-name {
@@ -322,5 +355,10 @@ body, html {
   font-size: 0.85rem;
 }
 
-.max { font-weight: bold; }
-.min { opacity: 0.6; }
+.max {
+  font-weight: bold;
+}
+
+.min {
+  opacity: 0.6;
+}
