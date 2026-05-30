@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Search, MapPin, Wind, Droplets, Moon,
-  Sun, Cloud, CloudRain, CloudLightning, CloudSnow, CloudFog
+  Sun, Cloud, CloudRain, CloudLightning, CloudSnow, CloudFog, Thermometer
 } from 'lucide-react';
 import './App.css';
 import { countryData } from './cities';
@@ -153,14 +153,14 @@ function App() {
 
   return (
     <div className={`container ${isDark ? 'dark' : 'light'} ${weather ? getWeatherClass(weather.condition) : 'default'}`}>
-      <button
-        onClick={() => setDark(!isDark)}
-        className="theme-toggle"
-        title="Toggle Theme"
-      >
-        {isDark ? <Sun size={24} color="white" /> : <Moon size={24} color="#333" />}
-      </button>
       <div className="glass-card">
+        <button
+          onClick={() => setDark(!isDark)}
+          className="theme-toggle"
+          title="Toggle Theme"
+        >
+          {isDark ? <Sun size={20} color="white" /> : <Moon size={20} color="#333" />}
+        </button>
         <h2 className="title">CloudCast</h2>
 
         <div className="search-section">
@@ -204,6 +204,7 @@ function App() {
               <WeatherIcon code={weather.condition} />
             </div>
             <h1 className="temp">{weather.temp}°C</h1>
+            <p className="weather-desc">{getWeatherDescription(weather.condition)}</p>
             <div className="details">
               <div className="col">
                 <Wind size={20} />
@@ -216,9 +217,9 @@ function App() {
                 <span>Humidity</span>
               </div>
               <div className="col">
-                <Sun size={20} />
-                <p>{getWeatherDescription(weather.condition)}</p>
-                <span>Condition</span>
+                <Thermometer size={20} />
+                <p>{Math.round(weather.daily.temperature_2m_max[0])}° / {Math.round(weather.daily.temperature_2m_min[0])}°</p>
+                <span>High / Low</span>
               </div>
             </div>
             <div className="forecast-grid">
